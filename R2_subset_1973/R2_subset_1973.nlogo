@@ -187,9 +187,9 @@ to go
   go-white-mangrove
   go-cypress
   go-sawgrass
-  ;go-red-bay
-  ;go-poisonwood
-  ;go-gumbo-limbo
+  go-red-bay
+  go-poisonwood
+  go-gumbo-limbo
   go-spikerush
   go-wax-myrtle
   go-willow
@@ -211,7 +211,9 @@ to go
     print ( word N " dead patches" )
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ; TDH 20180720 - write data to file at last iteration
-  file-delete "ecotone_output.txt"
+  if file-exists? "ecotone_output.txt" [
+    file-delete "ecotone_output.txt"
+    ]
   file-open "ecotone_output.txt"
     file-print "Cell_ID,day_died,reason_died"
     ask patches
@@ -231,7 +233,9 @@ to go-iteration-output [ iteration_number ]
 ;-------------------------------------------------------------------------
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ; TDH 20180726 - record days dry at each iteration. In R, get local optima for each dry event using rle
-  file-delete (word "/daysDry/" iteration_number "_" Cell_ID "daysDry_output.txt")
+  if file-exists? (word "/daysDry/" iteration_number "_" Cell_ID "daysDry_output.txt") [
+    file-delete (word "/daysDry/" iteration_number "_" Cell_ID "daysDry_output.txt")
+  ]
   file-open (word "/daysDry/" iteration_number "_" Cell_ID "daysDry_output.txt")
     file-print "Cell_ID,days_dry,days_wet"
     ask patches
@@ -385,11 +389,25 @@ to go-buttonwood
     if count plants > 0 [
       ; Process environmental interaction
 
+      ; Accumulate and reset the patch hydroperiod variables
+      ifelse depth > 0 [ set days_wet days_wet + days-per-tick set days_dry 0 ]
+                       [ set days_dry days_dry + days-per-tick set days_wet 0 ]
+
+      ; Guassian of days_dry to determine death
+      ; The range is [0, 365] days, value is N( days_dry, 15 )
+      let days_dry_ min ( list 365
+                          max ( list 0 random-normal days_dry 15 ) )
+      let days_wet_ min ( list 365
+                          max ( list 0 random-normal days_wet 15 ) )
+
       ; Test for plant death
       let death  false
       let reason ""
 
       ; if reason_to_die [ set death true  set reason "xyz" ]
+      ; no depth criterion
+      if days_wet_ > 191 [ set reason "days_wet > 191"  set death true ]
+      if days_dry_ > 212 [ set reason "days_dry > 212"  set death true ]
 
       if death [
         necrosis plants reason
@@ -424,7 +442,18 @@ to go-red-mangrove
       let death  false
       let reason ""
 
+      ; Guassian of days_dry to determine death
+      ; The range is [0, 365] days, value is N( days_dry, 15 )
+      let days_dry_ min ( list 365
+                          max ( list 0 random-normal days_dry 15 ) )
+      let days_wet_ min ( list 365
+                          max ( list 0 random-normal days_wet 15 ) )
+
+
       ; if reason_to_die [ set death true  set reason "xyz" ]
+      ; no depth criterion
+      if days_wet_ > 210 [ set reason "days_wet > 210"  set death true ]
+      if days_dry_ > 205 [ set reason "days_dry > 205"  set death true ]
 
       if death [
         necrosis plants reason
@@ -494,7 +523,18 @@ to go-cypress
       let death  false
       let reason ""
 
+      ; Guassian of days_dry to determine death
+      ; The range is [0, 365] days, value is N( days_dry, 15 )
+      let days_dry_ min ( list 365
+                          max ( list 0 random-normal days_dry 15 ) )
+      let days_wet_ min ( list 365
+                          max ( list 0 random-normal days_wet 15 ) )
+
+
       ; if reason_to_die [ set death true  set reason "xyz" ]
+      ; no depth criterion
+      if days_wet_ > 258 [ set reason "days_wet > 258"  set death true ]
+      if days_dry_ > 179 [ set reason "days_dry > 179"  set death true ]
 
       if death [
         necrosis plants reason
@@ -540,6 +580,9 @@ to go-sawgrass
       ; The range is [0, 365] days, value is N( days_dry, 15 )
       let days_dry_ min ( list 365
                           max ( list 0 random-normal days_dry 15 ) )
+      let days_wet_ min ( list 365
+                          max ( list 0 random-normal days_wet 15 ) )
+
 
       ; Get patch salinity
       set salinity Salinity.psu salinity_gauge
@@ -560,7 +603,8 @@ to go-sawgrass
       let reason ""
 
       if depth > 90      [ set reason "depth > 90 cm"   set death true ]
-      if days_dry_ > 360 [ set reason "days_dry > 360"  set death true ]
+      if days_wet_ > 245 [ set reason "days_wet > 245"  set death true ]
+      if days_dry_ > 195 [ set reason "days_dry > 195"  set death true ]
       if not death [
         if salinity_days > salinity_max_days_ [ set reason "salinity_days"
                                                 set death true ]
@@ -636,9 +680,9 @@ to go-spikerush
       let reason ""
 
       if depth < -100 [ set reason "depth < -100 cm"  set death true ]
-      if not death [
-        if days_dry_ > 160 [ set reason "days_dry > 160"  set death true ]
-      ]
+      if days_wet_ > 229 [ set reason "days_wet > 229"  set death true ]
+      if days_dry_ > 220 [ set reason "days_dry > 220"  set death true ]
+
       if not death [
         if salinity_days > salinity_max_days_ [ set reason "salinity_days"
                                                 set death true ]
@@ -744,11 +788,21 @@ to go-red-bay
     if count plants > 0 [
       ; Process environmental interaction
 
+      ; Guassian of days_dry to determine death
+      ; The range is [0, 365] days, value is N( days_dry, 15 )
+      let days_dry_ min ( list 365
+                          max ( list 0 random-normal days_dry 15 ) )
+      let days_wet_ min ( list 365
+                          max ( list 0 random-normal days_wet 15 ) )
+
+
       ; Test for plant death
       let death  false
       let reason ""
 
       ; if reason_to_die [ set death true  set reason "xyz" ]
+      if days_wet_ > 209 [ set reason "days_wet > 209"  set death true ]
+      if days_dry_ > 213 [ set reason "days_dry > 213"  set death true ]
 
       if death [
         necrosis plants reason
@@ -779,11 +833,21 @@ to go-poisonwood
     if count plants > 0 [
       ; Process environmental interaction
 
+      ; Guassian of days_dry to determine death
+      ; The range is [0, 365] days, value is N( days_dry, 15 )
+      let days_dry_ min ( list 365
+                          max ( list 0 random-normal days_dry 15 ) )
+      let days_wet_ min ( list 365
+                          max ( list 0 random-normal days_wet 15 ) )
+
+
       ; Test for plant death
       let death  false
       let reason ""
 
       ; if reason_to_die [ set death true  set reason "xyz" ]
+      if days_wet_ > 251 [ set reason "days_wet > 251"  set death true ]
+      if days_dry_ > 178 [ set reason "days_dry > 178"  set death true ]
 
       if death [
         necrosis plants reason
@@ -814,11 +878,21 @@ to go-gumbo-limbo
     if count plants > 0 [
       ; Process environmental interaction
 
+      ; Guassian of days_dry to determine death
+      ; The range is [0, 365] days, value is N( days_dry, 15 )
+      let days_dry_ min ( list 365
+                          max ( list 0 random-normal days_dry 15 ) )
+      let days_wet_ min ( list 365
+                          max ( list 0 random-normal days_wet 15 ) )
+
+
       ; Test for plant death
       let death  false
       let reason ""
 
       ; if reason_to_die [ set death true  set reason "xyz" ]
+      if days_wet_ > 215 [ set reason "days_wet > 215"  set death true ]
+      if days_dry_ > 201 [ set reason "days_dry > 201"  set death true ]
 
       if death [
         necrosis plants reason
@@ -1419,7 +1493,7 @@ INPUTBOX
 193
 105
 start-date
-2000-01-01
+1973-01-01
 1
 0
 String
@@ -1430,7 +1504,7 @@ INPUTBOX
 315
 105
 end-date
-2005-12-31
+2015-12-31
 1
 0
 String
