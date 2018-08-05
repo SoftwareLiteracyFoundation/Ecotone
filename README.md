@@ -1,8 +1,10 @@
 # Ecotone
-NetLogo Ecotone Dynamics Model
+[NetLogo](https://ccl.northwestern.edu/netlogo/) Ecotone Dynamics Model
 
 ## WHAT IS IT?
-A dynamic ecotone transformation model. Patches correspond to the 50 x 50 m vegetation classification map developed by Ruiz et al. (2017).  Turtles represent vegetation species.
+A [NetLogo](https://ccl.northwestern.edu/netlogo/) dynamic ecotone transformation model. Patches correspond to the 50 x 50 m vegetation classification map developed by Ruiz et al. (2017).  Turtles represent vegetation species.  [Read a whitepaper](./doc/Coastal_Ecotone_ABM_v0.pdf "Ecotone  model description") describing the model, [view slides](./doc/FIU_MOI_EcotoneABM_2018-1-19.pdf "Ecotone & MOI") presenting the development goals. 
+
+![NetLogo Ecotone GUI](./doc/Ecotone_ABM_GUI.png)
 
 ## HOW IT WORKS
 The Ruiz et al. (2017) vegetation map specifying vegetation codes for each patch has been transformed into a species-centric vegetation map with species binomem explicity identified on each patch. Turtles are initially sprouted on patches according to the GIS vegetation map. 
