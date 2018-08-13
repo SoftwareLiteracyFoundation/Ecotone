@@ -209,7 +209,7 @@ to go
     print ( word N " patches of Red Mangrove" )
     set N count Dead_patches
     print ( word N " dead patches" )
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ; TDH 20180720 - write data to file at last iteration
   if file-exists? "ecotone_output.txt" [
     file-delete "ecotone_output.txt"
@@ -261,6 +261,11 @@ to go-propagation [ adjacent-species adjacent-binomen ]
       if new-growth [ stop ] ; break the ask neighbors4 loop
     ]
 
+    ;;;;;;;;;;;;; allow mangrove encroachment at southern margin
+    if member? pxcor [38 39 40 41 42 43 86 87 88 89 90 91 92 93 94] and member? pycor [ 1 7 ] [
+      set new-growth true
+    ]
+    ;;;;;;;;;;;;;
     if new-growth [
       ; Apparently can't pass in reference to global *_patches or
       ; breed-specific sprout arguments
@@ -353,12 +358,14 @@ to go-black-mangrove
 
     if count plants > 0 [
       ; Process environmental interaction
-
       ; Test for plant death
       let death  false
       let reason ""
 
-      ; if reason_to_die [ set death true  set reason "xyz" ]
+      ; The range is [0, 365] days, value is N( days_dry, 15 )
+      let days_dry_ min ( list 365
+                          max ( list 0 random-normal days_dry 15 ) )
+      if days_dry_ > 68 [ set reason "days_dry > 68"  set death true ] ; red mangrove
 
       if death [
         necrosis plants reason
@@ -406,8 +413,8 @@ to go-buttonwood
 
       ; if reason_to_die [ set death true  set reason "xyz" ]
       ; no depth criterion
-      if days_wet_ > 191 [ set reason "days_wet > 191"  set death true ]
-      if days_dry_ > 212 [ set reason "days_dry > 212"  set death true ]
+      if days_wet_ > 738 [ set reason "days_wet > 738"  set death true ] ; 80th percentile
+      if days_dry_ > 66 [ set reason "days_dry > 66"  set death true ] ; 90th percentile
 
       if death [
         necrosis plants reason
@@ -446,14 +453,14 @@ to go-red-mangrove
       ; The range is [0, 365] days, value is N( days_dry, 15 )
       let days_dry_ min ( list 365
                           max ( list 0 random-normal days_dry 15 ) )
-      let days_wet_ min ( list 365
-                          max ( list 0 random-normal days_wet 15 ) )
+      ;let days_wet_ min ( list 365 ; red mangrove not killed by flooding
+      ;                    max ( list 0 random-normal days_wet 15 ) )
 
 
       ; if reason_to_die [ set death true  set reason "xyz" ]
       ; no depth criterion
-      if days_wet_ > 210 [ set reason "days_wet > 210"  set death true ]
-      if days_dry_ > 205 [ set reason "days_dry > 205"  set death true ]
+      ;if days_wet_ > 210 [ set reason "days_wet > 210"  set death true ]
+      if days_dry_ > 68 [ set reason "days_dry > 68"  set death true ]
 
       if death [
         necrosis plants reason
@@ -489,6 +496,10 @@ to go-white-mangrove
       let reason ""
 
       ; if reason_to_die [ set death true  set reason "xyz" ]
+      let days_dry_ min ( list 365
+                          max ( list 0 random-normal days_dry 15 ) )
+      if days_dry_ > 68 [ set reason "days_dry > 68"  set death true ] ; red mangrove
+
 
       if death [
         necrosis plants reason
@@ -533,8 +544,8 @@ to go-cypress
 
       ; if reason_to_die [ set death true  set reason "xyz" ]
       ; no depth criterion
-      if days_wet_ > 258 [ set reason "days_wet > 258"  set death true ]
-      if days_dry_ > 179 [ set reason "days_dry > 179"  set death true ]
+      if days_wet_ > 582 [ set reason "days_wet > 582"  set death true ]
+      if days_dry_ > 74 [ set reason "days_dry > 74"  set death true ]
 
       if death [
         necrosis plants reason
@@ -603,8 +614,8 @@ to go-sawgrass
       let reason ""
 
       if depth > 90      [ set reason "depth > 90 cm"   set death true ]
-      if days_wet_ > 245 [ set reason "days_wet > 245"  set death true ]
-      if days_dry_ > 195 [ set reason "days_dry > 195"  set death true ]
+      if days_wet_ > 626 [ set reason "days_wet > 626"  set death true ]
+      if days_dry_ > 70 [ set reason "days_dry > 70"  set death true ]
       if not death [
         if salinity_days > salinity_max_days_ [ set reason "salinity_days"
                                                 set death true ]
@@ -680,8 +691,8 @@ to go-spikerush
       let reason ""
 
       if depth < -100 [ set reason "depth < -100 cm"  set death true ]
-      if days_wet_ > 229 [ set reason "days_wet > 229"  set death true ]
-      if days_dry_ > 220 [ set reason "days_dry > 220"  set death true ]
+      if days_wet_ > 648 [ set reason "days_wet > 648"  set death true ]
+      if days_dry_ > 67 [ set reason "days_dry > 67"  set death true ]
 
       if not death [
         if salinity_days > salinity_max_days_ [ set reason "salinity_days"
@@ -801,8 +812,8 @@ to go-red-bay
       let reason ""
 
       ; if reason_to_die [ set death true  set reason "xyz" ]
-      if days_wet_ > 209 [ set reason "days_wet > 209"  set death true ]
-      if days_dry_ > 213 [ set reason "days_dry > 213"  set death true ]
+      if days_wet_ > 571 [ set reason "days_wet > 571"  set death true ]
+      if days_dry_ > 69 [ set reason "days_dry > 69"  set death true ]
 
       if death [
         necrosis plants reason
@@ -846,8 +857,8 @@ to go-poisonwood
       let reason ""
 
       ; if reason_to_die [ set death true  set reason "xyz" ]
-      if days_wet_ > 251 [ set reason "days_wet > 251"  set death true ]
-      if days_dry_ > 178 [ set reason "days_dry > 178"  set death true ]
+      if days_wet_ > 412 [ set reason "days_wet > 412"  set death true ]
+      if days_dry_ > 66 [ set reason "days_dry > 66"  set death true ]
 
       if death [
         necrosis plants reason
@@ -891,8 +902,8 @@ to go-gumbo-limbo
       let reason ""
 
       ; if reason_to_die [ set death true  set reason "xyz" ]
-      if days_wet_ > 215 [ set reason "days_wet > 215"  set death true ]
-      if days_dry_ > 201 [ set reason "days_dry > 201"  set death true ]
+      if days_wet_ > 390 [ set reason "days_wet > 390"  set death true ]
+      if days_dry_ > 76 [ set reason "days_dry > 76"  set death true ]
 
       if death [
         necrosis plants reason
@@ -1289,6 +1300,9 @@ to set-color-lists
   set magenta_list[ "Open" ]
 end
 
+
+
+
 ;-------------------------------------------------------------------------
 to load-gis-shapefile
 ;-------------------------------------------------------------------------
@@ -1375,6 +1389,43 @@ to-report species_color [ species_ ]
 
   report color_
 end
+
+
+
+;-------------------------------------------------------------------------
+; Report the inundation threshold from the inundation list that holds the species name
+;-------------------------------------------------------------------------
+to-report inundation_limit [ species_ ]
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ; TDH 20180720 - write data to file at last iteration
+  if file-exists? "ecotone_output.txt" [
+    file-delete "ecotone_output.txt"
+    ]
+  file-open "ecotone_output.txt"
+    file-print "Cell_ID,day_died,reason_died"
+    ask patches
+    [ file-print (word Cell_ID "," day_died "," reason_died) ]
+  file-close
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  let color_ grey
+
+  ; black, gray, white, red, orange, brown, yellow, green,
+  ; lime, turquoise, cyan, sky, blue, violet, magenta, pink
+
+  ; NetLogo UGLY semantics for a switch : case statement...
+  ifelse member? species_ green_list   [ set color_ green   ] [
+  ifelse member? species_ blue_list    [ set color_ blue    ] [
+  ifelse member? species_ yellow_list  [ set color_ yellow  ] [
+  ifelse member? species_ red_list     [ set color_ red     ] [
+  ifelse member? species_ magenta_list [ set color_ magenta ] [
+  ifelse member? species_ brown_list   [ set color_ brown   ] [
+  if     member? species_ pink_list    [ set color_ pink    ]
+  ] ] ] ] ] ]
+
+  report color_
+end
+
 
 ;-------------------------------------------------------------------------
 ; arguments are patch x, y coordinates
