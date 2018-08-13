@@ -201,7 +201,36 @@ to go
     set N count Dead_patches
     print ( word N " dead patches" )
     stop
+ 
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ; TDH 20180720 - write data to file at last iteration
+  file-delete "ecotone_output.txt"
+  file-open "ecotone_output.txt"
+    file-print "Cell_ID,day_died,reason_died"
+    ask patches
+    [ file-print (word Cell_ID "," day_died "," reason_died) ]
+  file-close
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+    stop
   ]
+
+
+
+end
+
+;-------------------------------------------------------------------------
+to go-iteration-output [ iteration_number ]
+;-------------------------------------------------------------------------
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ; TDH 20180726 - record days dry at each iteration. In R, get local optima for each dry event using rle
+  file-delete (word "/daysDry/" iteration_number "_" Cell_ID "daysDry_output.txt")
+  file-open (word "/daysDry/" iteration_number "_" Cell_ID "daysDry_output.txt")
+    file-print "Cell_ID,days_dry,days_wet"
+    ask patches
+    [ file-print (word Cell_ID "," days_dry "," days_wet) ]
+  file-close
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 end
 
 ;-------------------------------------------------------------------------
