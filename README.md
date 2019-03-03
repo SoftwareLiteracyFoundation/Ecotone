@@ -17,9 +17,11 @@ Model|Description
 [Future](Future_EDM_1973) | Freshwater to mangrove prediction model 2015 - 2100
 [Demo](DemoModel) | Original conceptual model
 
-NetLogo model user interface for the calibration model.
+
+NetLogo model user interface for the [calibration model](Calibration_R2_1973).
 ![NetLogo model user interface for the calibration model.](./doc/R2_1973_GUI.png)
 
-NetLogo model user interface for the projection model.
+
+NetLogo model user interface for the [projection model](Future_EDM_1973).
 ![NetLogo model user interface for the projection model](./doc/EDM_1973_GUI_LowSLR.png)
 
