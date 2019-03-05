@@ -68,7 +68,6 @@ breed [ pond-apples         pond-apple   ]
 breed [ open                a-open       ]
 
 turtles-own [ species          ; string of species name
-              ;cohabit
               salinity_max      ; tolerable salinity
               salinity_max_days ; tolerable period
             ]
@@ -83,9 +82,6 @@ patches-own [ ; Computed or time series patch variables
               salinity_days      ; days maintained above salinity_threshold
 
               cell_ID      ; Read from GIS VegMap shapefile in setup
-              ;veg_code
-              ;description
-              ;matrix
               elevation
 
               reason_died  ; String reason the patch turtles died
@@ -103,7 +99,6 @@ patches-own [ ; Computed or time series patch variables
               ; Initialized when patches are created from the GIS shapefile,
               ; then transfered to initial turtle sprouted on the patch
               species_init  ; Read from GIS VegMap shapefile in setup
-              ;cohabit_init
             ]
 
 ;------------------------------------------------------------------------------
@@ -127,7 +122,6 @@ to setup
   print "Loading hydro data..."
   set Stage.data time:ts-load        "Cell_RandomStage_2015_2115.csv"
   set MeanSeaLevel.data time:ts-load "Elev_MSL_2015-2115.csv"
-  ;set Salinity.gauge.data time:ts-load "TR_SaltFill_1973-1-1_2018-7-18.csv"
 
   print "Loading GIS shapefile..." ; Load GIS data into VegMap & GaugeZones
   load-gis-shapefile
@@ -275,9 +269,6 @@ to go-propagation
       ; Environmental conditions are checked below
       set growth_species species_init
     ]
-
-    ;if salinity > 1 [ print (word "(" pxcor " " pycor ") S: " salinity " "
-    ;                         name_fit " " fitness ) ]
 
     ; Check conditions as to whether or not new growth actually occurs
     ; Note that success is checking 1 - P since it assumes new-growth is true
@@ -548,7 +539,7 @@ to go-red-mangrove
       let death  false
       let reason ""
 
-      ; JP: At what depth do Red Mangrove "drown"?  
+      ; At what depth do Red Mangrove "drown"?  
       if MSL > elevation + 80 [
         set death true
         set reason (word "MSL > " msl-open-depth "cm")
@@ -825,7 +816,7 @@ end
 to record-timeseries-output
 ;-------------------------------------------------------------------------
 
-  ; JP Make this a reporter?
+  ; Make this a reporter?
   let aquifer-saline-vol 0
   let aquifer-fresh-vol  0
 
@@ -1143,18 +1134,9 @@ to load-gis-shapefile
   ; gis will set patch variables outside the imported shapefile to NaN...
   gis:apply-coverage VegMap "CELL_ID"     cell_ID
   gis:apply-coverage VegMap "NAVD88_FT"   elevation
-  ;gis:apply-coverage VegMap "VEG_CODE"    veg_code
-  ;gis:apply-coverage VegMap "DESCRIPTIO"  description
-  ;gis:apply-coverage VegMap "MATRIX"      matrix
 
   ; These are read from the GIS shapefile, but transfered to turtles
   gis:apply-coverage VegMap "SPECIES"     species_init
-  ;gis:apply-coverage VegMap "BINOMEN"     binomen_init
-  ;gis:apply-coverage VegMap "ABUNDANCE"   abundance_init
-  ;gis:apply-coverage VegMap "MINABUNDAN"  min_abundance_init
-  ;gis:apply-coverage VegMap "MAXABUNDAN"  max_abundance_init
-  ;gis:apply-coverage VegMap "MAXHEIGHT"   max_height_init
-  ;gis:apply-coverage VegMap "COHABIT"     cohabit_init
 
   ; Station names for stage and salinity gauges/timeseries
   gis:apply-coverage GaugeZones "STAGE"      stage_gauge
@@ -1952,7 +1934,7 @@ Netlog gis extension is used to initialze the patches and turtles.
 Ruiz et al., (2017) The Everglades National Park and Big Cypres National Preserve Vegetation Mapping Project, Interim Report–Southeast Saline Everglades (Region 2). Everglades National Park Natural Resource Report NPS/SFCN/NRR—2017/1494. Pablo L. Ruiz, Helena C. Giannini, Michelle C. Prats, Craig P. Perry, Michael A. Foguer, Alejandro Arteaga Garcia, Robert B. Shamblin, Kevin R. T. Whelan, Mary-Joe Hernandez, August 2017.
 
 ### Domain
-The world is a grid of (118, 273) patches corresponding to a spatial domain of 5,900 x 13,650 m in 50 m patches. The domain wraps hoizontally, but not vertically. The origin is (0,0) in the lower left corner.
+The world is a grid of 57,528 (204 x 282) patches corresponding to a spatial domain of 10.2 km by 14.1 km in 50 m patches. The domain wraps hoizontally, but not vertically. The origin is (0,0) in the lower left corner.
 
 Patch elevations are NAVD88 (cm).  Water elevation data from EDEN are NAVD88 (cm).  Water elevation data from hydrographic stations have been previously converted from NGVD29 (ft) to NAVD88 (cm).
 

@@ -92,7 +92,6 @@ patches-own [ ; Computed or time series patch variables
               porewater_salinity ;
               salinity_threshold ; set by turtle salinity_max
               salinity_days      ; days maintained above salinity_threshold
-              ;phosphorus
 
               cell_ID      ; Read from GIS VegMap shapefile in setup
               veg_code     ; Read from GIS VegMap shapefile in setup
@@ -175,11 +174,6 @@ to go
   go-sawgrass
   go-spikerush
   go-wax-myrtle
-  ;go-red-mangrove ; Can't die... sprouted in go-propagation
-  ;go-cypress
-  ;go-buttonwood
-  ;go-willow
-  ;go-red-bay
 
   ; Process dead patches for succession
   go-propagation
@@ -210,7 +204,8 @@ to go-propagation
     let mangrove-boundary-patch false
 
     ;---------------------------------------------------------
-    ; JP Model-specific replacement along the southern bondary
+    ; Model-specific replacement along the southern bondary
+    ; to allow the establishment of red mangrove
     ;---------------------------------------------------------
     if member? pycor [ 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17
                        25 26 45 52 67 ] [
@@ -232,8 +227,6 @@ to go-propagation
          (pycor = 14 and member? pxcor [148 149 150]) or
          (pycor = 15 and member? pxcor [151]) or
          (pycor = 16 and member? pxcor [151]) or
-         ;(pycor = 17 and member? pxcor [152]) or
-         ;(pycor = 25 and member? pxcor [156]) or
          (pycor = 26 and member? pxcor [157]) or
          (pycor = 45 and member? pxcor [169]) or
          (pycor = 52 and member? pxcor [173]) or
@@ -611,181 +604,6 @@ to go-wax-myrtle
 end
 
 ;-------------------------------------------------------------------------
-to go-red-mangrove
-;-------------------------------------------------------------------------
-
-  let dead_patches_ no-patches ; local empty patch agentset
-
-  ask Red_Mangrove_patches [
-
-    let plants red-mangroves-here
-
-    if count plants > 0 [
-      ; Process environmental interaction
-
-      ; Test for plant death
-      let death  false
-      let reason ""
-
-      ; if reason_to_die [ set death true  set reason "xyz" ]
-
-      if death [
-        necrosis plants reason
-        ; store dead patches in local dead_patches_
-        set dead_patches_ (patch-set dead_patches_ self)
-      ]
-    ]
-  ] ; ask Red_Mangrove_patches
-
-  if count dead_patches_ > 0 [
-    ; Remove dead_patches_ from Red_Mangrove_patches
-    ask dead_patches_ [ set Red_Mangrove_patches other Red_Mangrove_patches ]
-    ; Add dead_patches_ to global Dead_patches agentset
-    set Dead_patches (patch-set Dead_patches dead_patches_)
-  ]
-end
-
-;-------------------------------------------------------------------------
-to go-buttonwood
-;-------------------------------------------------------------------------
-
-  let dead_patches_ no-patches ; local empty patch agentset
-
-  ask Buttonwood_patches [
-
-    let plants buttonwoods-here
-
-    if count plants > 0 [
-      ; Process environmental interaction
-
-      ; Test for plant death
-      let death  false
-      let reason ""
-
-      ; if reason_to_die [ set death true  set reason "xyz" ]
-
-      if death [
-        necrosis plants reason
-        ; store dead patches in local dead_patches_
-        set dead_patches_ (patch-set dead_patches_ self)
-      ]
-    ]
-  ] ; ask Buttonwood_patches
-
-  if count dead_patches_ > 0 [
-    ; Remove dead_patches_ from Buttonwood_patches
-    ask dead_patches_ [ set Buttonwood_patches other Buttonwood_patches ]
-    ; Add dead_patches_ to global Dead_patches agentset
-    set Dead_patches (patch-set Dead_patches dead_patches_)
-  ]
-end
-
-;-------------------------------------------------------------------------
-to go-cypress
-;-------------------------------------------------------------------------
-
-  let dead_patches_ no-patches ; local empty patch agentset
-
-  ask Cypress_patches [
-
-    let plants cypress-here
-
-    if count plants > 0 [
-      ; Process environmental interaction
-
-      ; Test for plant death
-      let death  false
-      let reason ""
-
-      ; if reason_to_die [ set death true  set reason "xyz" ]
-
-      if death [
-        necrosis plants reason
-        ; store dead patches in local dead_patches_
-        set dead_patches_ (patch-set dead_patches_ self)
-      ]
-    ]
-  ] ; ask Cypress_patches
-
-  if count dead_patches_ > 0 [
-    ; Remove dead_patches_ from Cypress_patches
-    ask dead_patches_ [ set Cypress_patches other Cypress_patches ]
-    ; Add dead_patches_ to global Dead_patches agentset
-    set Dead_patches (patch-set Dead_patches dead_patches_)
-  ]
-end
-
-;-------------------------------------------------------------------------
-to go-willow
-;-------------------------------------------------------------------------
-
-  let dead_patches_ no-patches ; local empty patch agentset
-
-  ask Willow_patches [
-
-    let plants willows-here
-
-    if count plants > 0 [
-      ; Process environmental interaction
-
-      ; Test for plant death
-      let death  false
-      let reason ""
-
-      ; if reason_to_die [ set death true  set reason "xyz" ]
-
-      if death [
-        necrosis plants reason
-        ; store dead patches in local dead_patches_
-        set dead_patches_ (patch-set dead_patches_ self)
-      ]
-    ]
-  ] ; ask Willow_patches
-
-  if count dead_patches_ > 0 [
-    ; Remove dead_patches_ from Red_Bay_patches
-    ask dead_patches_ [ set Willow_patches other Willow_patches ]
-    ; Add dead_patches_ to global Dead_patches agentset
-    set Dead_patches (patch-set Dead_patches dead_patches_)
-  ]
-end
-
-;-------------------------------------------------------------------------
-to go-red-bay
-;-------------------------------------------------------------------------
-
-  let dead_patches_ no-patches ; local empty patch agentset
-
-  ask Red_Bay_patches [
-
-    let plants red-bays-here
-
-    if count plants > 0 [
-      ; Process environmental interaction
-
-      ; Test for plant death
-      let death  false
-      let reason ""
-
-      ; if reason_to_die [ set death true  set reason "xyz" ]
-
-      if death [
-        necrosis plants reason
-        ; store dead patches in local dead_patches_
-        set dead_patches_ (patch-set dead_patches_ self)
-      ]
-    ]
-  ] ; ask Red_Bay_patches
-
-  if count dead_patches_ > 0 [
-    ; Remove dead_patches_ from Red_Bay_patches
-    ask dead_patches_ [ set Red_Bay_patches other Red_Bay_patches ]
-    ; Add dead_patches_ to global Dead_patches agentset
-    set Dead_patches (patch-set Dead_patches dead_patches_)
-  ]
-end
-
-;-------------------------------------------------------------------------
 to update-patch-depth-salinity
 ;-------------------------------------------------------------------------
   ask Model_patches [
@@ -871,7 +689,7 @@ end
 ;-------------------------------------------------------------------------
 to record-timeseries-output
 ;-------------------------------------------------------------------------
-  ; JP Hardcoded for patches defined in init-timeseries-output
+  ; Hardcoded for patches defined in init-timeseries-output
   let wet1 0   let dry1 0   let salt1 0
   let xy item 0 Patch_timeseries_xy
   ask patch first xy last xy [
@@ -1196,28 +1014,6 @@ to load-gis-shapefile
   gis:set-world-envelope gis:envelope-of VegMap
 
   set GaugeZones gis:load-dataset "../R2_GIS/R2_1973_Gauge_Zones.shp"
-
-  ; JP: What happens when a GIS Cell_ID is represented in more
-  ;     than one row of the DB table????
-  ;     For example, the following Cell_IDs have multiple species:
-  ;
-  ; 1282637	CSBGc	Red Bay
-  ; 1282637	CSBGc	Pond Apple
-  ; 1282637	CSBGc	Sweet Bay
-  ;
-  ; 1419354	CSBTGc	Buttonwood
-  ; 1419354	CSBTGc	Red Mangrove
-  ;
-  ; 1612842	SMXX	Black Mangrove
-  ; 1612842	SMXX	Red Mangrove
-  ; 1612842	SMXX	White Mangrove
-  ;
-  ; observer> show patches with [cell_id = 1282637]
-  ; observer: (agentset, 2 patches)
-  ; observer> show patches with [cell_id = 1419354]
-  ; observer: (agentset, 0 patches)
-  ; observer> show patches with [cell_id = 1612842]
-  ; observer: (agentset, 1 patch)
 
   print "Loading patch variables from GIS..."
   ; gis will set patch variables outside the imported shapefile to NaN...
