@@ -2,7 +2,7 @@
 ## Ecotone Dynamics Agent Based Models 
 Three [NetLogo](https://ccl.northwestern.edu/netlogo/) Ecotone Dynamics Models.
 
-These models characterize observed and future freshwater coastal marsh to saltwater mangrove estuary ecotone dynamics in response to rising sea levels.  [It is suggested](doc/Ecological_Modelling_Submission.pdf) that quantifying landscape vegetation changes from fresh to salt tolerant species can quantify the underlying fresh to saltwater transformation in the surficial aquifer without the need for intensive hydrological modelling. 
+These models characterize observed and future freshwater coastal marsh to saltwater mangrove estuary ecotone dynamics in response to rising sea levels.  [It is suggested](https://www.sciencedirect.com/science/article/pii/S0304380019301607) that quantifying landscape vegetation changes from fresh to salt tolerant species can quantify the underlying fresh to saltwater transformation in the surficial aquifer without the need for intensive hydrological modelling. 
 
 ### Model Domain
 The model domain covers the southern tip of the Florida Peninsula within Everglades National Park. 
